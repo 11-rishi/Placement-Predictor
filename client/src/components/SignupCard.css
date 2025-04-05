@@ -179,4 +179,16 @@ input[type="text"]:focus {
 
 .home-link a:hover {
   text-decoration: underline;
+}
+
+.error-message {
+  background-color: rgba(255, 87, 87, 0.1);
+  color: #ff5757;
+  padding: 0.8rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  width: 100%;
+  text-align: center;
+  border: 1px solid rgba(255, 87, 87, 0.3);
 } 

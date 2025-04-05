@@ -1,70 +1,97 @@
-# Getting Started with Create React App
+# Placement Predictor
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A MERN stack application for user authentication and placement prediction.
 
-## Available Scripts
+## Project Structure
 
-In the project directory, you can run:
+This project is organized into client and server directories:
 
-### `npm start`
+- **client**: React frontend application
+- **server**: Node.js/Express backend API with MongoDB
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Prerequisites
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Node.js (v14 or higher)
+- MongoDB (local installation or MongoDB Atlas account)
 
-### `npm test`
+## Setup Instructions
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 1. Clone the repository
 
-### `npm run build`
+```bash
+git clone https://github.com/your-username/placement-predictor.git
+cd placement-predictor
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 2. Install dependencies
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+To install dependencies for both client and server:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+npm run install-all
+```
 
-### `npm run eject`
+Alternatively, you can install them separately:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+# Install root dependencies
+npm install
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# Install client dependencies
+cd client
+npm install
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+# Install server dependencies
+cd ../server
+npm install
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### 3. Set up environment variables
 
-## Learn More
+Create a `.env` file in the `server` directory with the following variables:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```
+PORT=5000
+MONGODB_URI=mongodb://localhost:27017/placement-predictor
+JWT_SECRET=your-super-secret-key
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Adjust the `MONGODB_URI` to your MongoDB connection string if using MongoDB Atlas.
 
-### Code Splitting
+### 4. Start MongoDB
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Make sure MongoDB is running locally if you're using a local MongoDB instance.
 
-### Analyzing the Bundle Size
+### 5. Run the application
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+To run both the client and server concurrently:
 
-### Making a Progressive Web App
+```bash
+npm run dev
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+To run the server or client separately:
 
-### Advanced Configuration
+```bash
+# Run the server only
+npm run server
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+# Run the client only
+npm run client
+```
 
-### Deployment
+The server will run on `http://localhost:5000` and the client on `http://localhost:3000`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## API Endpoints
 
-### `npm run build` fails to minify
+### Authentication
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- **POST /api/auth/register**: Register a new user
+- **POST /api/auth/login**: Login an existing user
+- **GET /api/auth/profile**: Get user profile (requires authentication)
+
+## Technologies Used
+
+- **Frontend**: React, React Router, Axios
+- **Backend**: Node.js, Express, MongoDB, Mongoose
+- **Authentication**: JWT (JSON Web Tokens), bcrypt 

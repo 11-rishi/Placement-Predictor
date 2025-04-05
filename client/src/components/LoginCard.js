@@ -1,21 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './LoginCard.css';
 import Navbar from './Navbar';
+import { useAuth } from '../context/AuthContext';
 
 const LoginCard = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
+  const { login, user, error } = useAuth();
 
-  const handleSubmit = (e) => {
+  // If user is already logged in, redirect to home
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login attempt:', { email, password: '********', rememberMe });
-    alert('Login successful! This is a demo.');
-    // Redirect to homepage after login
-    navigate('/');
+    setLoading(true);
+    setErrorMessage('');
+    
+    try {
+      const success = await login(email, password);
+      if (success) {
+        console.log('Login successful!');
+        navigate('/');
+      } else {
+        setErrorMessage(error || 'Invalid email or password');
+      }
+    } catch (err) {
+      setErrorMessage('An error occurred. Please try again.');
+      console.error('Login error:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const togglePasswordVisibility = () => {
@@ -34,6 +58,7 @@ const LoginCard = () => {
           </svg>
         </div>
         <h1>Welcome Back</h1>
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="email">User ID</label>
@@ -44,6 +69,7 @@ const LoginCard = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              disabled={loading}
             />
           </div>
           <div className="form-group">
@@ -56,11 +82,13 @@ const LoginCard = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                disabled={loading}
               />
               <button
                 type="button"
                 className={`toggle-password ${showPassword ? 'active' : ''}`}
                 onClick={togglePasswordVisibility}
+                disabled={loading}
               >
                 <svg viewBox="0 0 24 24" width="24" height="24">
                   <path
@@ -78,14 +106,17 @@ const LoginCard = () => {
                 id="rememberMe"
                 checked={rememberMe}
                 onChange={() => setRememberMe(!rememberMe)}
+                disabled={loading}
               />
               <span>Remember Me</span>
             </label>
             <a href="#" className="forgot-password">Forgot Password</a>
           </div>
           <div className="button-group">
-            <button type="reset" className="btn btn-clear">Clear</button>
-            <button type="submit" className="btn btn-login">Login</button>
+            <button type="reset" className="btn btn-clear" disabled={loading}>Clear</button>
+            <button type="submit" className="btn btn-login" disabled={loading}>
+              {loading ? 'Logging in...' : 'Login'}
+            </button>
           </div>
         </form>
         <div className="register-prompt">
