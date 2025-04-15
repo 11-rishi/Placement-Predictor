@@ -1,28 +1,66 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './SignupCard.css';
 import Navbar from './Navbar';
+import { useAuth } from '../context/AuthContext';
 
 const SignupCard = () => {
-  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
   const [contactNo, setContactNo] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
+  const { register, user, error } = useAuth();
 
-  const handleSubmit = (e) => {
+  // If user is already logged in, redirect to home
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Password validation
     if (password !== confirmPassword) {
-      alert('Passwords do not match!');
+      setErrorMessage('Passwords do not match!');
       return;
     }
-    console.log('Signup attempt:', { name, contactNo, email, password: '********' });
-    alert('Signup successful! This is a demo.');
-    // Redirect to login page after signup
-    navigate('/login');
+    
+    if (password.length < 6) {
+      setErrorMessage('Password must be at least 6 characters long');
+      return;
+    }
+    
+    setLoading(true);
+    setErrorMessage('');
+    
+    try {
+      const userData = {
+        username,
+        email,
+        password
+      };
+      
+      const success = await register(userData);
+      if (success) {
+        console.log('Registration successful!');
+        navigate('/login');
+      } else {
+        setErrorMessage(error || 'Registration failed. Please try again.');
+      }
+    } catch (err) {
+      setErrorMessage('An error occurred. Please try again.');
+      console.error('Registration error:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const togglePasswordVisibility = () => {
@@ -45,16 +83,18 @@ const SignupCard = () => {
           </svg>
         </div>
         <h1>Create Account</h1>
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="name">Full Name</label>
+            <label htmlFor="name">Username</label>
             <input
               type="text"
-              id="name"
-              placeholder="Enter your full name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              id="username"
+              placeholder="Enter your username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
+              disabled={loading}
             />
           </div>
           <div className="form-group">
@@ -65,7 +105,7 @@ const SignupCard = () => {
               placeholder="Enter your contact number"
               value={contactNo}
               onChange={(e) => setContactNo(e.target.value)}
-              required
+              disabled={loading}
             />
           </div>
           <div className="form-group">
@@ -77,6 +117,7 @@ const SignupCard = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              disabled={loading}
             />
           </div>
           <div className="form-group">
@@ -89,11 +130,13 @@ const SignupCard = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                disabled={loading}
               />
               <button
                 type="button"
                 className={`toggle-password ${showPassword ? 'active' : ''}`}
                 onClick={togglePasswordVisibility}
+                disabled={loading}
               >
                 <svg viewBox="0 0 24 24" width="24" height="24">
                   <path
@@ -114,11 +157,13 @@ const SignupCard = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
+                disabled={loading}
               />
               <button
                 type="button"
                 className={`toggle-password ${showConfirmPassword ? 'active' : ''}`}
                 onClick={toggleConfirmPasswordVisibility}
+                disabled={loading}
               >
                 <svg viewBox="0 0 24 24" width="24" height="24">
                   <path
@@ -130,8 +175,10 @@ const SignupCard = () => {
             </div>
           </div>
           <div className="button-group">
-            <button type="reset" className="btn btn-clear">Clear</button>
-            <button type="submit" className="btn btn-signup">Sign Up</button>
+            <button type="reset" className="btn btn-clear" disabled={loading}>Clear</button>
+            <button type="submit" className="btn btn-signup" disabled={loading}>
+              {loading ? 'Signing up...' : 'Sign Up'}
+            </button>
           </div>
         </form>
         <div className="login-prompt">
