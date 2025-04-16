@@ -5,6 +5,7 @@ import HomePage from './components/HomePage';
 import LoginCard from './components/LoginCard';
 import SignupCard from './components/SignupCard';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import FileSelection from './components/FileSelection';
 
 // Protected route component
 const ProtectedRoute = ({ children }) => {
@@ -27,13 +28,17 @@ function App() {
       <Router>
         <div className="app">
           <Routes>
-            <Route path="/" element={
-              <ProtectedRoute>
-                <HomePage />
-              </ProtectedRoute>
-            } />
+            <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginCard />} />
             <Route path="/signup" element={<SignupCard />} />
+            <Route 
+              path="/select-files" 
+              element={
+                <ProtectedRoute>
+                  <FileSelection />
+                </ProtectedRoute>
+              } 
+            />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>

@@ -1,101 +1,248 @@
 .homepage {
-  display: flex;
-  flex-direction: column;
   min-height: 100vh;
-  position: relative;
-  color: #fff;
-}
-
-/* Remove the linear gradient background and rely on the body's background image from App.css */
-.homepage::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  backdrop-filter: blur(5px);
-  z-index: -1;
-}
-
-.homepage-content {
-  flex: 1;
   display: flex;
   flex-direction: column;
+}
+
+.hero-section {
+  height: 60vh;
+  min-height: 500px;
+  display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
   position: relative;
-  z-index: 1;
+  overflow: hidden;
 }
 
-.homepage-content h1 {
-  font-size: 2.5rem;
+.hero-content {
+  max-width: 800px;
+  animation: fadeInUp 1s ease-out;
+  position: relative;
+  z-index: 2;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.2);
+  padding: 2rem;
+  border-radius: 15px;
+  backdrop-filter: blur(3px);
+}
+
+.hero-content h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.hero-subtitle {
+  font-size: 1.5rem;
   margin-bottom: 1.5rem;
-  color: #fff;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  opacity: 1;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
 }
 
-.homepage-content p {
+.hero-description {
   font-size: 1.2rem;
-  margin-bottom: 2rem;
-  max-width: 600px;
   line-height: 1.6;
+  margin-bottom: 2rem;
+  opacity: 1;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.features-section {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  margin-top: -50px;
+  z-index: 3;
+}
+
+.feature-card {
+  flex: 1;
+  max-width: 300px;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 2;
+  backdrop-filter: blur(5px);
+  cursor: pointer;
+  outline: none;
+}
+
+.feature-card:hover, .feature-card:focus {
+  transform: translateY(-10px);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.feature-card:active {
+  transform: translateY(-5px);
+}
+
+.feature-icon {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover .feature-icon {
+  transform: scale(1.1);
+}
+
+.feature-card h3 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  transition: color 0.3s ease;
+}
+
+.feature-card:hover h3 {
+  color: #3498db;
+}
+
+.feature-card p {
+  color: #666;
+  line-height: 1.6;
+}
+
+.user-section, .cta-section {
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.user-card, .cta-section {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.user-card h2 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.welcome-message {
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.cta-section h2 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+}
+
+.cta-section p {
+  color: #666;
+  margin-bottom: 2rem;
 }
 
 .cta-buttons {
   display: flex;
   gap: 1rem;
-  margin-top: 1rem;
+  justify-content: center;
 }
 
 .cta-button {
-  padding: 0.8rem 1.8rem;
-  font-size: 1rem;
+  padding: 1rem 2rem;
   border: none;
-  border-radius: 30px;
-  cursor: pointer;
+  border-radius: 50px;
+  font-size: 1.1rem;
   font-weight: 600;
+  cursor: pointer;
   transition: all 0.3s ease;
   text-decoration: none;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
 .cta-button.login {
-  background-color: #fff;
-  color: #6e8efb;
-}
-
-.cta-button.login:hover {
-  background-color: #f0f0f0;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  background-color: #3498db;
+  color: white;
 }
 
 .cta-button.signup {
-  background-color: transparent;
-  color: #fff;
-  border: 2px solid #fff;
+  background-color: #2ecc71;
+  color: white;
+}
+
+.cta-button.select-files {
+  background-color: #9b59b6;
+  color: white;
+  width: 100%;
+}
+
+.cta-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.cta-button.login:hover {
+  background-color: #2980b9;
 }
 
 .cta-button.signup:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  background-color: #27ae60;
+}
+
+.cta-button.select-files:hover {
+  background-color: #8e44ad;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .features-section {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .feature-card {
+    max-width: 100%;
+  }
+
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+  }
+
+  .cta-button {
+    width: 100%;
+  }
 }
 
 .user-info {
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.4);
   border-radius: 10px;
   padding: 2rem;
   margin-bottom: 2rem;
   width: 100%;
   max-width: 500px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(3px);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -110,7 +257,7 @@
 
 .logout-btn {
   padding: 0.6rem 1.5rem;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255, 0.95);
   color: #6e8efb;
   border: none;
   border-radius: 30px;
@@ -124,24 +271,6 @@
   background-color: #fff;
   transform: translateY(-2px);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-}
-
-@media (max-width: 768px) {
-  .homepage-content h1 {
-    font-size: 2rem;
-  }
-  
-  .homepage-content p {
-    font-size: 1rem;
-  }
-  
-  .cta-buttons {
-    flex-direction: column;
-  }
-  
-  .user-info {
-    padding: 1.5rem;
-  }
 }
 
 .action-buttons {
@@ -178,7 +307,7 @@
 }
 
 .score-result {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.95);
   border-radius: 10px;
   padding: 1.5rem;
   margin-top: 1.5rem;
@@ -216,4 +345,49 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.hero-cta {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-top: 2rem;
+  animation: fadeInUp 0.8s ease-out 0.3s both;
+}
+
+.hero-cta .cta-button {
+  padding: 1rem 2.5rem;
+  font-size: 1.2rem;
+  border-radius: 50px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.hero-cta .cta-button.login {
+  background-color: rgba(255, 255, 255, 0.95);
+  color: #2c3e50;
+  border: 2px solid rgba(255, 255, 255, 0.95);
+}
+
+.hero-cta .cta-button.signup {
+  background-color: transparent;
+  color: white;
+  border: 2px solid white;
+}
+
+.hero-cta .cta-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.hero-cta .cta-button.login:hover {
+  background-color: white;
+  color: #2c3e50;
+}
+
+.hero-cta .cta-button.signup:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 } 
