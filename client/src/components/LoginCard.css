@@ -11,11 +11,23 @@
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
+.login-logo {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 0.2rem;
+}
+
+.login-logo img {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+}
+
 .user-icon {
   width: 80px;
   height: 80px;
   margin: 0 auto 1.5rem;
-  padding: 1rem;
+  padding: 0.5rem;
   border-radius: 50%;
   color: #fff;
   display: flex;
@@ -153,18 +165,18 @@ input[type="text"]:focus {
 }
 
 .btn-clear:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: #ed4d4dfc;
 }
 
 .btn-login:hover {
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(233, 64, 64, 0.8);
 }
 
 .register-prompt {
   color: #fff;
   font-size: 0.9rem;
   margin-top: 1rem;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  text-shadow: 1px 1px 2px rgba(231, 41, 41, 0.764);
 }
 
 .btn-register {
@@ -174,7 +186,7 @@ input[type="text"]:focus {
   padding: 0.5rem;
   margin-top: 0.5rem;
   text-decoration: none;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  text-shadow: 1px 1px 2px rgba(220, 103, 67, 0.849);
   display: inline-block;
 }
 
@@ -203,7 +215,7 @@ input[type="text"]:focus {
 }
 
 .home-link a {
-  color: #4285F4;
+  color: #42f463;
   text-decoration: none;
   font-size: 0.9rem;
 }
@@ -213,7 +225,7 @@ input[type="text"]:focus {
 }
 
 .error-message {
-  background-color: rgba(255, 87, 87, 0.1);
+  background-color: rgba(255, 93, 93, 0.878);
   color: #ff5757;
   padding: 0.8rem;
   border-radius: 8px;

@@ -3,6 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import './LoginCard.css';
 import Navbar from './Navbar';
 import { useAuth } from '../context/AuthContext';
+import logo from '../images/logo2.png'; 
+
 
 const LoginCard = () => {
   const [email, setEmail] = useState('');
@@ -17,7 +19,7 @@ const LoginCard = () => {
   // If user is already logged in, redirect to home
   useEffect(() => {
     if (user) {
-      navigate('/');
+      navigate('/dashboard');
     }
   }, [user, navigate]);
 
@@ -30,7 +32,7 @@ const LoginCard = () => {
       const success = await login(email, password);
       if (success) {
         console.log('Login successful!');
-        navigate('/');
+        navigate('/dashboard');
       } else {
         setErrorMessage(error || 'Invalid email or password');
       }
@@ -50,12 +52,8 @@ const LoginCard = () => {
     <div className="login-page">
       <Navbar />
       <div className="login-card">
-        <div className="user-icon">
-          <svg viewBox="0 0 24 24" width="50" height="50">
-            <circle cx="12" cy="12" r="11" fill="none" stroke="currentColor" strokeWidth="2" />
-            <circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" strokeWidth="2" />
-            <path d="M4 20.5c0-4 3.5-8 8-8s8 4 8 8" fill="none" stroke="currentColor" strokeWidth="2" />
-          </svg>
+        <div className="login-logo">
+          <img src={logo} alt="Logo" className="logo-img" />
         </div>
         <h1>Welcome Back</h1>
         {errorMessage && <div className="error-message">{errorMessage}</div>}
@@ -90,12 +88,7 @@ const LoginCard = () => {
                 onClick={togglePasswordVisibility}
                 disabled={loading}
               >
-                <svg viewBox="0 0 24 24" width="24" height="24">
-                  <path
-                    d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
-                    fill="currentColor"
-                  />
-                </svg>
+                👁
               </button>
             </div>
           </div>
@@ -108,23 +101,19 @@ const LoginCard = () => {
                 onChange={() => setRememberMe(!rememberMe)}
                 disabled={loading}
               />
-              <span>Remember Me</span>
+              Remember Me
             </label>
-            <a href="#" className="forgot-password">Forgot Password</a>
+            <a href="#" className="forgot-password">Forgot Password?</a>
           </div>
           <div className="button-group">
-            <button type="reset" className="btn btn-clear" disabled={loading}>Clear</button>
-            <button type="submit" className="btn btn-login" disabled={loading}>
+            <button type="submit" className="btn login" disabled={loading}>
               {loading ? 'Logging in...' : 'Login'}
             </button>
           </div>
         </form>
         <div className="register-prompt">
           <p>Don't have an account?</p>
-          <Link to="/signup" className="btn btn-register">Register</Link>
-        </div>
-        <div className="home-link">
-          <Link to="/">Back to Homepage</Link>
+          <Link to="/signup" className="btn register">Register</Link>
         </div>
       </div>
     </div>

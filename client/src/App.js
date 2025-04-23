@@ -4,47 +4,68 @@ import './App.css';
 import HomePage from './components/HomePage';
 import LoginCard from './components/LoginCard';
 import SignupCard from './components/SignupCard';
+import Dashboard from './components/Dashboard';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import FileSelection from './components/FileSelection';
+import Navbar from './components/Navbar';
 
 // Protected route component
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
-  
+
   if (loading) {
     return <div>Loading...</div>;
   }
-  
+
   if (!user) {
     return <Navigate to="/login" replace />;
   }
-  
+
   return children;
 };
 
-function App() {
+// Main App
+function AppWrapper() {
   return (
     <AuthProvider>
-      <Router>
-        <div className="app">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginCard />} />
-            <Route path="/signup" element={<SignupCard />} />
-            <Route 
-              path="/select-files" 
-              element={
-                <ProtectedRoute>
-                  <FileSelection />
-                </ProtectedRoute>
-              } 
-            />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </div>
-      </Router>
+      <App />
     </AuthProvider>
   );
 }
 
-export default App;
+function App() {
+  const { user } = useAuth(); // ✅ Define user here
+
+  return (
+    <Router>
+      <div className="app">
+        {/* Show Navbar on all pages except login/signup */}
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginCard />} />
+          <Route path="/signup" element={<SignupCard />} />
+
+          <Route
+            path="/dashboard"
+            element={
+              user ? <Dashboard /> : <Navigate to="/login" replace />
+            }
+          />
+
+          <Route
+            path="/select-files"
+            element={
+              <ProtectedRoute>
+                <FileSelection />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </div>
+    </Router>
+  );
+}
+
+export default AppWrapper;

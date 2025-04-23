@@ -3,6 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import './SignupCard.css';
 import Navbar from './Navbar';
 import { useAuth } from '../context/AuthContext';
+import logo from '../images/logo2.png'; 
+
 
 const SignupCard = () => {
   const [username, setUsername] = useState('');
@@ -75,13 +77,9 @@ const SignupCard = () => {
     <div className="signup-page">
       <Navbar />
       <div className="signup-card">
-        <div className="user-icon">
-          <svg viewBox="0 0 24 24" width="50" height="50">
-            <circle cx="12" cy="12" r="11" fill="none" stroke="currentColor" strokeWidth="2" />
-            <circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" strokeWidth="2" />
-            <path d="M4 20.5c0-4 3.5-8 8-8s8 4 8 8" fill="none" stroke="currentColor" strokeWidth="2" />
-          </svg>
-        </div>
+      <div className="login-logo">
+          <img src={logo} alt="Logo" className="logo-img" />
+        </div>  
         <h1>Create Account</h1>
         {errorMessage && <div className="error-message">{errorMessage}</div>}
         <form onSubmit={handleSubmit}>
@@ -175,7 +173,6 @@ const SignupCard = () => {
             </div>
           </div>
           <div className="button-group">
-            <button type="reset" className="btn btn-clear" disabled={loading}>Clear</button>
             <button type="submit" className="btn btn-signup" disabled={loading}>
               {loading ? 'Signing up...' : 'Sign Up'}
             </button>
@@ -184,9 +181,6 @@ const SignupCard = () => {
         <div className="login-prompt">
           <p>Already have an account?</p>
           <Link to="/login" className="btn-login-link">Login</Link>
-        </div>
-        <div className="home-link">
-          <Link to="/">Back to Homepage</Link>
         </div>
       </div>
     </div>
