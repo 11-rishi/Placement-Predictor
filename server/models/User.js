@@ -19,6 +19,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  atsScore: {  // Field to store the ATS score
+    type: Number,
+    default: 0,  // Default value of 0 if no ATS score is provided
+  },
   createdAt: {
     type: Date,
     default: Date.now,
@@ -49,4 +53,3 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;
-

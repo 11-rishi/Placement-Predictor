@@ -5,6 +5,7 @@ import Navbar from './Navbar';
 import { useAuth } from '../context/AuthContext';
 import FileUpload from './FileUpload';
 
+
 const HomePage = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -70,25 +71,6 @@ const HomePage = () => {
               </button>
             </div>
           )}
-        </div>
-      </div>
-
-      <div className="stats-bar">
-        <div className="stat-item">
-          <span className="stat-number">97%</span>
-          <span className="stat-text">Accuracy Rate</span>
-        </div>
-        <div className="stat-item">
-          <span className="stat-number">10,000+</span>
-          <span className="stat-text">Students Placed</span>
-        </div>
-        <div className="stat-item">
-          <span className="stat-number">500+</span>
-          <span className="stat-text">Partner Companies</span>
-        </div>
-        <div className="stat-item">
-          <span className="stat-number">80%</span>
-          <span className="stat-text">Higher Interview Rate</span>
         </div>
       </div>
 

@@ -3,15 +3,14 @@ import axios from 'axios';
 
 const AuthContext = createContext();
 
-export const useAuth = () => useContext(AuthContext);
-
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [atsScore, setAtsScore] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Fetch user on app load if token exists
   useEffect(() => {
-    // Check if there's a token in localStorage on app load
     const token = localStorage.getItem('token');
     if (token) {
       fetchUser(token);
@@ -24,11 +23,12 @@ export const AuthProvider = ({ children }) => {
     try {
       const config = {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       };
       const res = await axios.get('/api/auth/profile', config);
       setUser(res.data.user);
+      setAtsScore(res.data.user.atsScore); // Optional: if you return ATS from backend
     } catch (err) {
       console.error('Error fetching user:', err);
       localStorage.removeItem('token');
@@ -40,11 +40,9 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     setError(null);
     try {
-      const res = await axios.post('/api/auth/login', {
-        email,
-        password
-      });
+      const res = await axios.post('/api/auth/login', { email, password });
       setUser(res.data.user);
+      setAtsScore(res.data.user.atsScore); // Optional
       localStorage.setItem('token', res.data.token);
       return true;
     } catch (err) {
@@ -67,16 +65,28 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('token');
     setUser(null);
+    setAtsScore(null);
   };
 
   const value = {
     user,
+    setUser,
+    atsScore,
+    setAtsScore,
     loading,
     error,
     login,
     register,
-    logout
+    logout,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}; 
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuth = () => {
+  return useContext(AuthContext);
+};

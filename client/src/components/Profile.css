@@ -1,0 +1,63 @@
+.profile-page {
+    background: linear-gradient(to bottom right, #f8f9fa, #e9ecef);
+    min-height: 100vh;
+    padding: 2rem;
+  }
+  
+  .profile-container {
+    max-width: 700px;
+    margin: auto;
+    background: #fff;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+  
+  .profile-card {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .user-info p {
+    font-size: 1.1rem;
+    margin: 0.5rem 0;
+  }
+  
+  .score-section {
+    text-align: center;
+  }
+  
+  .ats-score {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-top: 1rem;
+    display: inline-flex;
+    align-items: baseline;
+  }
+  
+  .ats-score .score-value {
+    font-size: 3rem;
+  }
+  
+  .ats-score.high {
+    color: #28a745;
+  }
+  .ats-score.medium {
+    color: #ffc107;
+  }
+  .ats-score.low {
+    color: #dc3545;
+  }
+  
+  .no-score {
+    color: #6c757d;
+  }
+  
