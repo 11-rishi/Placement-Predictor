@@ -94,4 +94,4 @@ The server will run on `http://localhost:5000` and the client on `http://localho
 
 - **Frontend**: React, React Router, Axios
 - **Backend**: Node.js, Express, MongoDB, Mongoose
-- **Authentication**: JWT (JSON Web Tokens), bcrypt 
+- **Authentication**: JWT (JSON Web Tokens), bcrypt

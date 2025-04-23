@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -26,10 +26,10 @@ const userSchema = new mongoose.Schema({
 });
 
 // Pre-save hook to hash password
-userSchema.pre('save', async function(next) {
+userSchema.pre("save", async function (next) {
   // Only hash the password if it's modified (or new)
-  if (!this.isModified('password')) return next();
-  
+  if (!this.isModified("password")) return next();
+
   try {
     // Generate a salt
     const salt = await bcrypt.genSalt(10);
@@ -42,10 +42,11 @@ userSchema.pre('save', async function(next) {
 });
 
 // Method to check if password is correct
-userSchema.methods.comparePassword = async function(candidatePassword) {
+userSchema.methods.comparePassword = async function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 
-module.exports = User; 
+module.exports = User;
+
