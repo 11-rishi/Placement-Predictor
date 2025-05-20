@@ -32,7 +32,7 @@ const HomePage = () => {
     if (!user) {
       navigate('/login');
     } else {
-      navigate('/select-files');
+      navigate('/dashboard');
     }
   };
 
@@ -83,24 +83,24 @@ const HomePage = () => {
             </div>
             <h3>Upload Your Resume</h3>
             <p>Upload your resume and academic credentials for AI analysis</p>
+            <span className="arrow-connector">→</span>
           </div>
-          <div className="step-arrow">→</div>
           <div className="step">
             <div className="step-icon">
               <span className="icon-placeholder">🎯</span>
             </div>
             <h3>Get Your ATS Score</h3>
             <p>Receive a detailed ATS compatibility score and suggestions</p>
+            <span className="arrow-connector">→</span>
           </div>
-          <div className="step-arrow">→</div>
           <div className="step">
             <div className="step-icon">
               <span className="icon-placeholder">📈</span>
             </div>
             <h3>Skill Assessment</h3>
             <p>Complete aptitude and coding assessments to evaluate your skills</p>
+            <span className="arrow-connector">→</span>
           </div>
-          <div className="step-arrow">→</div>
           <div className="step">
             <div className="step-icon">
               <span className="icon-placeholder">🏆</span>

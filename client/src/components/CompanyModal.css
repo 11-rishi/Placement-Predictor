@@ -1,0 +1,211 @@
+.company-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(30, 41, 59, 0.55);
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.company-modal-card {
+  background: rgba(255, 255, 255, 0.95); /* Changed from dark to light background */
+  border-radius: 22px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  padding: 2.2rem 2rem 2rem 2rem;
+  min-width: 340px;
+  max-width: 95vw;
+  min-height: 320px;
+  position: relative;
+  color: #1e293b; /* Changed text color to dark */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.close-btn {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #bfc9d1;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.close-btn:hover {
+  color: #3b82f6;
+}
+.modal-step h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+  text-align: center;
+  color: #1e293b; /* Explicitly set heading color to dark */
+}
+
+.modal-step h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 1rem 0 0.5rem 0;
+  color: #3b82f6; /* Blue color for subheadings */
+}
+.type-btns {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-bottom: 1.2rem;
+}
+.type-btn {
+  padding: 0.8rem 2.2rem;
+  border-radius: 18px;
+  border: none;
+  font-size: 1.08rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(59,130,246,0.10);
+  transition: background 0.2s, transform 0.2s;
+}
+.type-btn.nontech {
+  background: linear-gradient(90deg, #6366f1, #818cf8);
+}
+.type-btn:hover {
+  background: linear-gradient(90deg, #2563eb, #60a5fa);
+  transform: translateY(-2px) scale(1.03);
+}
+.company-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1.2rem;
+}
+.company-btn {
+  padding: 0.7rem 1.5rem;
+  border-radius: 16px;
+  border: none;
+  font-size: 1.05rem;
+  font-weight: 600;
+  background: rgba(59,130,246,0.10);
+  color: #3b82f6;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+.company-btn:hover {
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+  color: #fff;
+  transform: translateY(-2px) scale(1.03);
+}
+.back-btn {
+  margin-top: 1.2rem;
+  background: none;
+  border: 1.5px solid #3b82f6;
+  color: #3b82f6;
+  border-radius: 16px;
+  padding: 0.6rem 1.2rem;
+  font-size: 1.01rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.back-btn:hover {
+  background: #3b82f6;
+  color: #fff;
+}
+.question-list {
+  margin: 0.7rem 0 1.2rem 0;
+  padding-left: 1.2rem;
+  color: #1e293b; /* Changed from #bfc9d1 to a dark blue/black color */
+  font-size: 1.01rem;
+}
+.question-list li {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+.question-label {
+  font-weight: 600;
+  color: #3b82f6;
+  margin-bottom: 0.5rem;
+  font-size: 1.05rem;
+}
+
+.question-text {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.question-attempt {
+  width: 100%;
+}
+
+.answer-input {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #1e293b;
+  background-color: #f8fafc;
+  resize: vertical;
+  margin-bottom: 1rem;
+  font-family: inherit;
+}
+
+.answer-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+.score-summary {
+  background-color: #f8fafc;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #e2e8f0;
+  width: 100%;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.placement-label {
+  font-weight: 700;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+
+.placement-high {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+
+.placement-medium {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+.placement-low {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+@media (max-width: 600px) {
+  .company-modal-card {
+    min-width: 90vw;
+    padding: 1.2rem 0.5rem 1rem 0.5rem;
+  }
+  .type-btns {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .company-list {
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+}

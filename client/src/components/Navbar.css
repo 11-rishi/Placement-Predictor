@@ -16,14 +16,13 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 0.8rem 2rem;
-  background-color: transparent; /* ✅ fully transparent background */
-  box-shadow: none;              /* ✅ optional: remove shadow for complete invisibility */
+  background-color: transparent;
+  box-shadow: none;
   position: sticky;
   top: 0;
   z-index: 800;
 }
 
-/* Logo with hover effect */
 .nav-logo a {
   display: flex;
   align-items: center;
@@ -82,7 +81,6 @@ body {
   align-items: center;
 }
 
-/* Enhanced link styles with hover effect */
 .nav-links a {
   color: rgba(255, 255, 255, 0.8);
   text-decoration: none;
@@ -127,7 +125,6 @@ body {
   background-color: white;
 }
 
-/* User dropdown styles with enhanced hover */
 .user-dropdown {
   position: relative;
   display: inline-block;

@@ -1,133 +1,6 @@
-// import React, { useState, useRef } from "react";
-// import "./FileUpload.css";
-
-// const FileUpload = () => {
-//   const [file, setFile] = useState(null);
-//   const [isDragging, setIsDragging] = useState(false);
-//   const [uploadProgress, setUploadProgress] = useState(0);
-//   const [uploadStatus, setUploadStatus] = useState("");
-//   const fileInputRef = useRef(null);
-
-//   const handleDragOver = (e) => {
-//     e.preventDefault();
-//     setIsDragging(true);
-//   };
-
-//   const handleDragLeave = () => {
-//     setIsDragging(false);
-//   };
-
-//   const handleDrop = (e) => {
-//     e.preventDefault();
-//     setIsDragging(false);
-//     const droppedFile = e.dataTransfer.files[0];
-//     validateAndSetFile(droppedFile);
-//   };
-
-//   const handleFileInput = (e) => {
-//     const selectedFile = e.target.files[0];
-//     validateAndSetFile(selectedFile);
-//   };
-
-//   const validateAndSetFile = (file) => {
-//     const allowedTypes = [
-//       "application/pdf",
-//       "application/msword",
-//       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-//     ];
-//     if (file && allowedTypes.includes(file.type)) {
-//       setFile(file);
-//       setUploadStatus("");
-//     } else {
-//       setUploadStatus("Please upload a PDF or Word document");
-//     }
-//   };
-
-//   const handleUpload = async () => {
-//     if (!file) return;
-
-//     const formData = new FormData();
-//     formData.append("resume", file);
-
-//     try {
-//       const response = await fetch("http://localhost:5000/upload", {
-//         method: "POST",
-//         body: formData,
-//         headers: {
-//           Authorization: `Bearer ${localStorage.getItem("token")}`,
-//         },
-//       });
-
-//       const data = await response.json();
-
-//       if (response.ok) {
-//         setUploadStatus("File uploaded successfully!");
-//         setFile(null);
-//         if (fileInputRef.current) {
-//           fileInputRef.current.value = "";
-//         }
-//       } else {
-//         setUploadStatus(data.message || "Upload failed");
-//       }
-//     } catch (error) {
-//       setUploadStatus("Error uploading file");
-//     }
-
-//     setUploadProgress(0);
-//   };
-
-//   return (
-//     <div className="file-upload-container">
-//       <div
-//         className={`drop-zone ${isDragging ? "dragging" : ""}`}
-//         onDragOver={handleDragOver}
-//         onDragLeave={handleDragLeave}
-//         onDrop={handleDrop}
-//       >
-//         <div className="upload-icon">
-//           <i className="fas fa-cloud-upload-alt"></i>
-//         </div>
-//         <p>Drag and drop your resume here or</p>
-//         <input
-//           type="file"
-//           ref={fileInputRef}
-//           onChange={handleFileInput}
-//           accept=".pdf,.doc,.docx"
-//           style={{ display: "none" }}
-//         />
-//         <button
-//           className="select-file-btn"
-//           onClick={() => fileInputRef.current.click()}
-//         >
-//           Select File
-//         </button>
-//       </div>
-
-//       {file && (
-//         <div className="file-info">
-//           <p>Selected file: {file.name}</p>
-//           <button className="upload-btn" onClick={handleUpload}>
-//             Generate ATS Score
-//           </button>
-//         </div>
-//       )}
-
-//       {uploadStatus && (
-//         <div
-//           className={`upload-status ${
-//             uploadStatus.includes("successfully") ? "success" : "error"
-//           }`}
-//         >
-//           {uploadStatus}
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default FileUpload;
 import React, { useState, useRef } from "react";
 import "./FileUpload.css";
+import { FaCloudUploadAlt } from "react-icons/fa";
 
 const FileUpload = () => {
   const [file, setFile] = useState(null);
@@ -135,6 +8,7 @@ const FileUpload = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [atsScore, setAtsScore] = useState(null);
+  const [recommendations, setRecommendations] = useState([]);
   const fileInputRef = useRef(null);
 
   const handleDragOver = (e) => {
@@ -164,6 +38,7 @@ const FileUpload = () => {
       setFile(file);
       setError("");
       setAtsScore(null);
+      setRecommendations([]);
     } else {
       setError("Please upload a PDF document");
     }
@@ -171,28 +46,25 @@ const FileUpload = () => {
 
   const handleUpload = async () => {
     if (!file) return;
-
     setIsLoading(true);
     setError("");
-
+    setAtsScore(null);
+    setRecommendations([]);
     const formData = new FormData();
     formData.append("resume", file);
-
     try {
       const response = await fetch("http://localhost:8080/upload", {
         method: "POST",
         body: formData,
       });
-
       const data = await response.json();
-
       if (response.ok && data.score !== undefined) {
         setAtsScore(data.score);
+        setRecommendations(data.recommendations || []);
       } else {
         setError(data.error || "Failed to analyze resume");
       }
     } catch (error) {
-      console.error("Error:", error);
       setError("Server connection error");
     } finally {
       setIsLoading(false);
@@ -202,86 +74,75 @@ const FileUpload = () => {
   const resetUpload = () => {
     setFile(null);
     setAtsScore(null);
+    setRecommendations([]);
     setError("");
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   return (
-    <div className="file-upload-container">
-      <h2>Resume ATS Score Analyzer</h2>
-
-      {atsScore === null ? (
-        <>
-          <div
-            className={`drop-zone ${isDragging ? "dragging" : ""}`}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-          >
-            <div className="upload-icon">
-              <i className="fas fa-cloud-upload-alt"></i>
-            </div>
-            <p>Drag and drop your resume here or</p>
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileInput}
-              accept=".pdf"
-              style={{ display: "none" }}
-            />
-            <button
-              className="select-file-btn"
-              onClick={() => fileInputRef.current.click()}
-            >
-              Select PDF File
-            </button>
+    <div className="file-upload-main-card">
+      {!atsScore && (
+        <div
+          className={`drop-zone-modern ${isDragging ? "dragging" : ""}`}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+        >
+          <div className="upload-icon-modern">
+            <FaCloudUploadAlt size={56} />
           </div>
-
+          <p className="upload-instruction">Drag & drop your resume here, or</p>
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileInput}
+            accept=".pdf"
+            style={{ display: "none" }}
+          />
+          <button
+            className="main-upload-btn"
+            onClick={() => fileInputRef.current.click()}
+            disabled={isLoading}
+          >
+            {file ? "Change File" : "Upload Resume"}
+          </button>
           {file && (
-            <div className="file-info">
-              <p>Selected file: {file.name}</p>
+            <div className="file-info-modern">
+              <span>{file.name}</span>
               <button
-                className="upload-btn"
+                className="main-upload-btn analyze"
                 onClick={handleUpload}
                 disabled={isLoading}
               >
-                {isLoading ? "Analyzing..." : "Generate ATS Score"}
+                {isLoading ? "Analyzing..." : "Analyze"}
               </button>
             </div>
           )}
-        </>
-      ) : (
-        <div className="score-display">
-          <div className="score-circle">
-            <span className="score-value">{atsScore}</span>
-            <span className="score-label">/ 100</span>
-          </div>
-
-          <div className="score-message">
-            {atsScore >= 80 ? (
-              <p className="excellent">
-                Excellent! Your resume is well-optimized for ATS systems.
-              </p>
-            ) : atsScore >= 60 ? (
-              <p className="good">
-                Good. Your resume should pass most ATS systems.
-              </p>
-            ) : (
-              <p className="needs-work">
-                Needs improvement. Your resume may struggle with ATS systems.
-              </p>
-            )}
-          </div>
-
-          <button className="reset-btn" onClick={resetUpload}>
-            Analyze Another Resume
-          </button>
+          {error && <div className="upload-status error">{error}</div>}
+          {isLoading && <div className="modern-spinner"></div>}
         </div>
       )}
-
-      {error && <div className="error-message">{error}</div>}
+      {atsScore !== null && !isLoading && (
+        <div className="ats-result-modern">
+          <div className="ats-score-circle">
+            <span className="score-value">{atsScore}</span>
+            <span className="score-label">ATS Score</span>
+          </div>
+          <div className="ats-recommendations">
+            <h3>Recommendations</h3>
+            <ul>
+              {recommendations.length > 0 ? (
+                recommendations.map((rec, idx) => <li key={idx}>{rec}</li>)
+              ) : (
+                <li>No recommendations available.</li>
+              )}
+            </ul>
+            <button className="main-upload-btn" onClick={resetUpload}>
+              Re-upload Resume
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

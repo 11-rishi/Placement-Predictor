@@ -6,7 +6,10 @@ const fs = require("fs");
 const path = require("path");
 const authRoutes = require("./routes/auth");
 const uploadRoutes = require("./routes/upload");
-const User = require("./models/User");  // Import the User model
+const atsScoreRoutes = require("./routes/atsScore");
+const testScoresRoutes = require("./routes/testScores");
+const User = require("./models/User");
+const fetch = require('node-fetch');
 
 // Create uploads directory if it doesn't exist
 const uploadsDir = path.join(__dirname, "uploads");
@@ -33,39 +36,101 @@ mongoose
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/upload", uploadRoutes);
+app.use("/api/ats-score", atsScoreRoutes);
+app.use("/api/test-scores", testScoresRoutes);
 
 // Serve uploaded files
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+// Judge0 Proxy Endpoint (Self-hosted, no API key required)
+app.post('/api/execute', async (req, res) => {
+  const { sourceCode, language, testCases } = req.body;
+  const JUDGE0_API_URL = 'http://localhost:2358'; // Self-hosted Judge0
+  const LANGUAGES = { python3: 71, java: 62, cpp: 54 };
+
+  try {
+    const results = [];
+    let passedTests = 0;
+    for (const testCase of testCases) {
+      // Create submission
+      const submissionResponse = await fetch(`${JUDGE0_API_URL}/submissions/?base64_encoded=false&wait=false`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          source_code: sourceCode,
+          language_id: LANGUAGES[language],
+          stdin: JSON.stringify(testCase.input),
+          cpu_time_limit: 5,
+          memory_limit: 128
+        })
+      });
+      if (!submissionResponse.ok) {
+        const errorText = await submissionResponse.text();
+        results.push({
+          input: testCase.input,
+          output: null,
+          expected: testCase.output,
+          success: false,
+          error: errorText
+        });
+        continue;
+      }
+      const { token } = await submissionResponse.json();
+      // Poll for result
+      let result;
+      let attempts = 0;
+      const maxAttempts = 10;
+      do {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await fetch(`${JUDGE0_API_URL}/submissions/${token}?base64_encoded=false`, {
+          headers: {
+            'content-type': 'application/json'
+          }
+        });
+        result = await response.json();
+        attempts++;
+      } while (result.status && result.status.id <= 2 && attempts < maxAttempts);
+      if (result.status && result.status.id === 3) {
+        // Success
+        let output = result.stdout ? result.stdout.trim() : '';
+        try { output = JSON.parse(output); } catch { /* ignore */ }
+        const expectedOutput = testCase.output;
+        const success = JSON.stringify(output) === JSON.stringify(expectedOutput);
+        if (success) passedTests++;
+        results.push({
+          input: testCase.input,
+          output,
+          expected: expectedOutput,
+          success,
+          error: null
+        });
+      } else {
+        const error = result.stderr || result.compile_output || 'Unknown error';
+        results.push({
+          input: testCase.input,
+          output: null,
+          expected: testCase.output,
+          success: false,
+          error
+        });
+      }
+    }
+    res.json({
+      success: passedTests === testCases.length,
+      results,
+      passedTests,
+      totalTests: testCases.length
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message || 'Failed to execute code.' });
+  }
+});
+
 // Basic route
 app.get("/", (req, res) => {
   res.send("Placement Predictor API is running");
-});
-
-// POST route to save the ATS score to the user's profile
-app.post("/api/save-ats-score", async (req, res) => {
-  const { userId, atsScore } = req.body;
-
-  if (!atsScore || !userId) {
-    return res.status(400).json({ error: "Invalid data" });
-  }
-
-  try {
-    // Find the user
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    // Store the ATS score in the user's document
-    user.atsScore = atsScore; // Assuming you added atsScore field in user model
-    await user.save();
-
-    res.status(200).json({ message: "ATS score saved successfully" });
-  } catch (error) {
-    console.error("Error saving ATS score:", error);
-    res.status(500).json({ error: "Server error" });
-  }
 });
 
 // Start server

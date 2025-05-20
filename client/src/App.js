@@ -9,7 +9,12 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import FileSelection from './components/FileSelection';
 import Navbar from './components/Navbar';
 import Profile from './components/Profile';
-
+import AboutUs from './components/Aboutus';
+import CompaniesPage from './components/CompaniesPage';
+import CompanyDetailPage from './components/CompanyDetailPage';
+import ResultsPage from './components/ResultsPage';
+import TestPage from './components/TestPage';
+import TestResultSheet from './components/TestResultSheet';
 
 // Protected route component
 const ProtectedRoute = ({ children }) => {
@@ -36,17 +41,28 @@ function AppWrapper() {
 }
 
 function App() {
-  const { user } = useAuth(); // ✅ Define user here
+  const { user } = useAuth();
 
   return (
     <Router>
       <div className="app">
-        {/* Show Navbar on all pages except login/signup */}
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginCard />} />
           <Route path="/signup" element={<SignupCard />} />
-
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/companies" element={<CompaniesPage />} />
+          <Route path="/companies/:companyName" element={<CompanyDetailPage />} />
+          <Route 
+            path="/companies/:companyName/test/:type" 
+            element={
+              <ProtectedRoute>
+                <TestPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route path="/companies/:companyName/results" element={<ResultsPage />} />
+          <Route path="/companies/:companyName/result-sheet" element={<TestResultSheet />} />
           <Route
             path="/dashboard"
             element={
@@ -54,15 +70,13 @@ function App() {
             }
           />
           <Route
-  path="/profile"
-  element={
-    <ProtectedRoute>
-      <Profile />
-    </ProtectedRoute>
-  }
-/>
-
-
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/select-files"
             element={
@@ -71,12 +85,12 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
     </Router>
   );
 }
+console.log('API KEY:', process.env.REACT_APP_RAPIDAPI_KEY);
 
 export default AppWrapper;

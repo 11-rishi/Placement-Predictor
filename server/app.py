@@ -1,5 +1,7 @@
 import os
 import re
+import sys
+import json
 import fitz  # PyMuPDF
 from flask import Flask, jsonify, request
 from flask_cors import CORS
@@ -18,11 +20,11 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # Define weights for ATS score calculation
 WEIGHTS = {
-    'Skills Count': 0.35,
-    'Experience': 0.20,
+    'Skills Count': 0.40,  # Increased weight for skills
+    'Experience': 0.25,    # Increased weight for experience
     'Education Level': 0.15,
-    'Certifications Count': 0.15,
-    'Project Count': 0.15,
+    'Certifications Count': 0.10,
+    'Project Count': 0.10,
 }
 
 
@@ -129,23 +131,49 @@ def calculate_ats_score(features):
     """Calculate ATS score based on extracted features"""
     weighted_score = 0
     
+    # Base score for having a resume
+    base_score = 20
+    
+    # Calculate weighted score for each feature
     for feature, weight in WEIGHTS.items():
         raw_value = features[feature]
-        weighted = raw_value * weight * 10  # scale the weight for percentage
-        weighted_score += weighted
         
-    return weighted_score
+        # Normalize raw values
+        if feature == 'Skills Count':
+            # Cap skills at 20 for normalization
+            normalized_value = min(raw_value, 20) / 20
+        elif feature == 'Experience':
+            # Cap experience at 10 years for normalization
+            normalized_value = min(raw_value, 10) / 10
+        elif feature == 'Education Level':
+            # Education is already normalized (0-3)
+            normalized_value = raw_value / 3
+        elif feature == 'Certifications Count':
+            # Cap certifications at 5 for normalization
+            normalized_value = min(raw_value, 5) / 5
+        elif feature == 'Project Count':
+            # Cap projects at 10 for normalization
+            normalized_value = min(raw_value, 10) / 10
+            
+        # Calculate weighted score (0-100 scale)
+        weighted = normalized_value * weight * 100
+        weighted_score += weighted
+    
+    # Add base score
+    final_score = base_score + weighted_score
+    
+    # Ensure score is between 0 and 100
+    return min(max(final_score, 0), 100)
 
 def process_resume(file_path):
     """Process resume and calculate ATS score"""
     # Extract text from the uploaded PDF
-
     resume_text = extract_text_from_pdf(file_path)
     
     if not resume_text:
         return {'success': False, 'message': 'Failed to extract text from the PDF'}
+    
     # Extract features from resume text
-
     skills_found = extract_skills(resume_text)
     experience = extract_experience(resume_text)
     education_level = extract_education(resume_text)
@@ -153,7 +181,6 @@ def process_resume(file_path):
     project_count = extract_project_count(resume_text)
     
     # Prepare features for calculation
-
     features = {
         'Skills Count': len(skills_found),
         'Experience': experience,
@@ -163,10 +190,20 @@ def process_resume(file_path):
     }
     
     # Calculate the ATS score
-
     ats_score = calculate_ats_score(features)
-
-    return {'success': True, 'score': round(ats_score, 2)}
+    
+    # Add additional information to the response
+    return {
+        'success': True,
+        'score': round(ats_score, 2),
+        'details': {
+            'skills_found': skills_found,
+            'experience_years': experience,
+            'education_level': education_level,
+            'certifications': cert_present,
+            'projects': project_count
+        }
+    }
 
 
 @app.route('/')
@@ -204,5 +241,21 @@ def upload_file():
         return jsonify({'score': result['score']})
     return jsonify({'error': result['message']})
 
+def main():
+    if len(sys.argv) != 2:
+        print(json.dumps({'error': 'Please provide a file path'}))
+        sys.exit(1)
+
+    file_path = sys.argv[1]
+    if not os.path.exists(file_path):
+        print(json.dumps({'error': 'File not found'}))
+        sys.exit(1)
+
+    result = process_resume(file_path)
+    print(json.dumps(result))
+
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=8080)
+    if len(sys.argv) > 1:
+        main()
+    else:
+        app.run(debug=True, host='0.0.0.0', port=8080)
